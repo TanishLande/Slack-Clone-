@@ -6,15 +6,21 @@ import React, { useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { SignInFLow } from '../type'
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface SignInCardProps {
     setState: (state: SignInFLow) => void
 };
 
 const SignInCard = ({setState}: SignInCardProps) => {
-
+    const { signIn } = useAuthActions();
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
+
+    const handleSignIn = (value: "github" | "google") => {
+        signIn(value);
+    }
+
   return (
     <Card className='w-full h-full p-8'>
         <CardHeader>
@@ -49,7 +55,7 @@ const SignInCard = ({setState}: SignInCardProps) => {
                 </Button>
             </form>
             <Separator />
-            <div className="flex flex-col gap-y-2.5 text-sm text-center">
+            <div className="flex flex-col md:gap-y-2.5 text-sm text-center">
                 <Button 
                 variant="outline" 
                 className='w-full'
@@ -57,16 +63,16 @@ const SignInCard = ({setState}: SignInCardProps) => {
                 onClick={() => {}}
                 size='lg'
                 >
-                   <FcGoogle className='size-5 mr-2' /> Continue with Google 
+                   <FcGoogle className='size-5 mr-1  md:mr-2' /> Continue with Google 
                 </Button>
                 <Button 
                 variant="outline" 
                 className='w-full'
                 disabled={false}
-                onClick={() => {}}
+                onClick={() => handleSignIn("github")}
                 size='lg'
                 >
-                   <FaGithub className='size-5 mr-2' /> Continue with Github 
+                   <FaGithub className='size-5 mr-1 md:mr-2' /> Continue with Github 
                 </Button>
             </div>
             <p className='text-sm text-center text-muted-foreground'>
