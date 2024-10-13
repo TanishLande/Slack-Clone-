@@ -1,7 +1,9 @@
 "use client"
-import { Button } from "@/components/ui/button";
+
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useRouter } from "next/navigation";
+
+import UserButton from "./features/auth/components/user-Button";
 
 
 export default function Home() {
@@ -14,11 +16,8 @@ export default function Home() {
   }
 
   return (
-    <div>
-      This is main home page
-      <Button onClick={handleSignOut}>
-        Sign Out  
-      </Button>
+    <div className="flex">
+      <UserButton />
     </div>
   );
 }

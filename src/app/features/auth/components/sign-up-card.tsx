@@ -22,6 +22,7 @@ const SignUpCard = ({setState}: SignUpCardProps) => {
     const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [name,setName] = useState("")
 
     const onPasswordSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -33,6 +34,7 @@ const SignUpCard = ({setState}: SignUpCardProps) => {
         try{
             setPending(true);
             await signIn("password", {
+                name,
                 email,
                 password,
                 flow: "signUp"
@@ -73,6 +75,14 @@ const SignUpCard = ({setState}: SignUpCardProps) => {
             </p>} 
             <CardContent className='space-y-5 px-0 pb-0'>
                 <form onSubmit={onPasswordSignUp} className='space-y-2.5'>
+                    <Input 
+                    disabled={pending}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    placeholder='Name'
+                    required
+                    />
                     <Input
                         disabled={pending}
                         value={email}
@@ -125,9 +135,9 @@ const SignUpCard = ({setState}: SignUpCardProps) => {
                         Continue with Email
                     </Button>
                 </form>
-                <p className='text-sm text-muted-foreground'>
-                    Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.
-                </p>
+                {/* <p className='text-sm text-muted-foreground'>
+
+                </p> */}
                 <Separator />
                 <div className="flex flex-col gap-y-2.5 text-sm text-center">
                     <Button 
