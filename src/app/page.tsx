@@ -1,19 +1,29 @@
 "use client"
 
-import { useAuthActions } from "@convex-dev/auth/react";
-import { useRouter } from "next/navigation";
 
+import { useEffect, useMemo } from "react";
 import UserButton from "./features/auth/components/user-Button";
+import { useGetWorkspaces } from "./features/workspace/api/use-get-workspace";
+import { useCreateWorkSpaceModal } from "./features/workspace/store/use-create-workspace-modal";
 
 
 export default function Home() {
-  const { signOut } = useAuthActions();
-  const router = useRouter();
+  const { data, isLoading } = useGetWorkspaces();
+  const [open, setOpen] = useCreateWorkSpaceModal();
 
-  const handleSignOut = () => {
-    router.push("/auth");
-    signOut();
-  }
+  const workSpacesId =  useMemo(() => {
+    return data?.[0]?._id
+  }, [data])
+
+  useEffect(() => {
+    if(isLoading) return;
+
+    if(workSpacesId) {
+      console.log("Redirect to workspace")
+    } else if (!open) {
+      setOpen(true)
+    }
+  }, [workSpacesId, isLoading, open, setOpen])
 
   return (
     <div className="flex">
