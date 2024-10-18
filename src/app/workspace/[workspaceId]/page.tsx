@@ -1,15 +1,17 @@
-interface workspaceIdProps {
-    params:{
-        workspaceId: string;
-    }
-}
+"use client"
+import { useGetWorkspace } from "@/app/features/workspace/api/use-get-workspace";
+import { useGetWorkspaces } from "@/app/features/workspace/api/use-get-workspaces";
+import { useWorkspaceId } from "@/app/hooks/use-workspace-id"
 
-const workspaceId = ({
-    params
-}: workspaceIdProps ) => {
+const workspaceId = () => {
+  const workspaceId =  useWorkspaceId();
+  const { data } = useGetWorkspace( {id: workspaceId } );
+
   return (
     <div>
-      ID:  {params.workspaceId}
+      ID:  {data?.userId} <br />
+      name: {data?.name} <br />
+      joinCode: {data?.joinCode}
     </div>
   )
 }
