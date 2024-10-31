@@ -13,7 +13,7 @@ const WorkspaceSwitcher = () =>{
   const router = useRouter();
   const [_open,setOpen] = useCreateWorkSpaceModal();
 
-  const { data: workspaces , isLoading: workSpacesLoading } = useGetWorkspaces();
+  const { data: workspaces  } = useGetWorkspaces();
   const  { data: workspace , isLoading: workSpaceLoading } = useGetWorkspace( { id: workspaceId })
 
   const filteredWorkspaces = workspaces?.filter(
@@ -21,8 +21,8 @@ const WorkspaceSwitcher = () =>{
   )
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger>
-            <Button className="size-9 relative overflow-hidden bg-[#ABABAB] hiver:bg-[#ABABA] text-slate-800 font-semibold text-lg">
+        <DropdownMenuTrigger asChild>
+            <Button className="size-9 relative overflow-hidden bg-[#a94fa8] hover:bg-[#ABABA] text-white font-semibold text-lg">
                 {workSpaceLoading ? (
                   <Loader className="size-5 animate-spin shrink-0" />
                 ) : (
@@ -46,11 +46,11 @@ const WorkspaceSwitcher = () =>{
                     className="cursor-pointer capitalize flex gap-x-2 "
                     onClick={() => { router.push(`/workspace/${workspace._id}`) }}
                   >
-                    <div className="size-9  relative overflow-hidden flex pt-1 rounded-md  justify-center align-center bg-[#616061] text-white font-semibold text-lg" >
+                    <div className="size-9  relative overflow-hidden flex pt-1 rounded-md  justify-center align-center bg-[#ABABAB] text-white font-semibold text-lg" >
                       {workspace.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="mt-1.5">
-                    {workspace.name}
+                    <p className="truca" >{workspace.name}</p>
                     </div>
                     
                   </DropdownMenuItem>
@@ -62,7 +62,7 @@ const WorkspaceSwitcher = () =>{
                   <div className= "size-9 rounded-md mt-2 relative overflow-hidden bg-[#F2F2F2] text-slate-800 font-semibold text-lg flex item-center justify-center mr-2">
                     <Plus  className="mt-1 rounded-lg" />
                   </div>
-                 <div className="mt-1.5">
+                 <div className="mt-2">
                  Create a new Workspace
                  </div>
                 </DropdownMenuItem>
