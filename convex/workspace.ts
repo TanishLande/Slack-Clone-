@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { auth } from "./auth";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 const generateCode = () => {
     const code = Array.from(
@@ -102,3 +103,84 @@ export const getUserId = query({
 })
 
 
+
+///Fucntion to update the anem of wokrspace
+export const update = mutation({
+  args: {
+    id: v.id("workspaces"),
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    // Verify user has permission to update this workspace
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) =>
+        q.eq("workspaceId", args.id).eq("userId", userId)
+      )
+      .unique();
+
+    if (!member || member.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+
+    // Update the workspace
+    const workspace = await ctx.db.patch(args.id, {
+      name: args.name,
+    });
+
+    return workspace;  
+  },
+});
+
+
+
+///function to delete the workspace
+export const remove = mutation({
+    args: {
+        id: v.id("workspaces"),
+    },
+    handler: async (ctx, args) => {
+        // Get the authenticated user
+        const userId = await getAuthUserId(ctx);
+        
+        if (!userId) {
+            throw new Error("Unauthorized: You must be logged in");
+        }
+
+        // Check if user is an admin of the workspace
+        const member = await ctx.db
+            .query("members")
+            .withIndex("by_workspace_id_user_id", (q) => 
+                q.eq("workspaceId", args.id).eq("userId", userId)
+            )
+            .unique();
+
+        if (!member || member.role !== "admin") {
+            throw new Error("Unauthorized: Only workspace admins can delete workspaces");
+        }
+
+        // Delete all workspace members
+        const members = await ctx.db
+            .query("members")
+            .withIndex("by_workspace_id", (q) => 
+                q.eq("workspaceId", args.id)
+            )
+            .collect();
+
+        // Use Promise.all for parallel deletion of members
+        await Promise.all(
+            members.map((member) => ctx.db.delete(member._id))
+        );
+
+        // Delete the workspace itself
+        await ctx.db.delete(args.id);
+
+        return args.id;
+    },
+});

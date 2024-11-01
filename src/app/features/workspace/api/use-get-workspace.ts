@@ -3,13 +3,13 @@ import { api } from "../../../../../convex/_generated/api"
 import { Id } from "../../../../../convex/_generated/dataModel";
 
 
-interface UseGetWorkspaceProps {
+interface useGetWorkspaceProps {
     id: Id<"workspaces">;
 }
 
 export const useGetWorkspace = ({
     id
-}: UseGetWorkspaceProps) =>{
+}: useGetWorkspaceProps) =>{
     const data =  useQuery(api.workspace.getUserId, {id});
     const isLoading = data === undefined;
 

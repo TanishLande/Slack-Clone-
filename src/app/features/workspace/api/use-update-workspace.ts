@@ -5,6 +5,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 
 type RequestType = {
   name: string;
+  id: Id<"workspaces">;
 };
 
 type ResponseType = Id<"workspaces"> | null;
@@ -16,23 +17,17 @@ type Options = {
   throwError?: boolean;
 };
 
-export const useCreateWorkspace = () => {
+export const useUpdateWorkspace = () => {
   const [data, setData] = useState<ResponseType>(null);
-  const [error, setError] =  useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [status, setStatus] = useState<"success" | "error" | "settled" | "pending" | null>(null);
 
-  const [status, setStatus] = useState<"sucess" | "error" | "settled" | "pending" | null>(null)
-  
-  // const [isPending, setIsPending] =  useState(false);
-  // const [isSucess,setIsSucess] =  useState(false);
-  // const [isError, setIsError] =  useState(false);
-  // const [isSettled, setIsSettled] = useState(false);
-
-  const isPending =  useMemo(() => status === "pending", [status]);
-  const isSucess =  useMemo(() => status === "sucess", [status]);
+  const isPending = useMemo(() => status === "pending", [status]);
+  const isSuccess = useMemo(() => status === "success", [status]);
   const isError = useMemo(() => status === "error", [status]);
-  const isSettled = useMemo(() => status === "settled", [status] );
+  const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.workspace.create);
+  const mutation = useMutation(api.workspace.update);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {
@@ -42,13 +37,18 @@ export const useCreateWorkspace = () => {
         setStatus("pending");
 
         const response = await mutation(values);
-        options?.onSuccess?.(response); 
+        setData(response);
+        setStatus("success");
+        options?.onSuccess?.(response);
+
         return response;
       } catch (error) {
+        setError(error as Error);
         setStatus("error");
         options?.onError?.(error as Error);
-        if (options?.throwError){
-          throw error 
+        
+        if (options?.throwError) {
+          throw error;
         }
       } finally {
         setStatus("settled");
@@ -63,8 +63,8 @@ export const useCreateWorkspace = () => {
     data,
     error,
     isPending,
-    isSucess,
+    isSuccess,
     isError,
-    isSettled
+    isSettled,
   };
 };

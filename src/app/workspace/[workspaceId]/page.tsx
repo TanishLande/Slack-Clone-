@@ -1,6 +1,5 @@
 "use client"
 import { useGetWorkspace } from "@/app/features/workspace/api/use-get-workspace";
-import { useGetWorkspaces } from "@/app/features/workspace/api/use-get-workspaces";
 import { useWorkspaceId } from "@/app/hooks/use-workspace-id"
 
 const workspaceId = () => {
