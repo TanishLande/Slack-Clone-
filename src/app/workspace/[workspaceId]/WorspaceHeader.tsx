@@ -147,15 +147,15 @@ export const WorkspaceHeader = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="flex item-center gap-0.5">
+      <div className="flex item-center text-white gap-0.5">
           <Hint label="Filter conversation" side="bottom" >
             <Button variant="ghost" size="sm" >
-              <ListFilter className="size-4" />
+              <ListFilter className="size-4 text-white" />
             </Button>
           </Hint>
           <Hint label="New message" side="bottom">
             <Button variant="ghost" size="sm" >
-              <SquarePen className="size-4" />
+              <SquarePen className="size-4 text-white" />
             </Button>
           </Hint>
       </div>
