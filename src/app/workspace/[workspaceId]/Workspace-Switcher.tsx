@@ -103,7 +103,7 @@ export default function WorkspaceSwitcher() {
   const [open, setOpen] = React.useState(false)
   const workspaceId = useWorkspaceId()
   const router = useRouter()
-  const [_, setOpenCreateModal] = useCreateWorkSpaceModal()
+  const [_OpenCreateModal, setOpenCreateModal] = useCreateWorkSpaceModal()
 
   const { data: workspaces } = useGetWorkspaces()
   const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({ id: workspaceId })
