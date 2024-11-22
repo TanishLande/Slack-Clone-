@@ -1,69 +1,3 @@
-// import { Button } from "@/components/ui/button"
-// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-
-// import { Doc } from "../../../../convex/_generated/dataModel"
-// import { ChevronDown } from "lucide-react"
-
-// interface WorkspaceHeaderProps {
-//     workspace: Doc<"workspaces">;
-//     isAdmin: boolean;
-// }
-
-// export const WorspaceHeader = ({
-//     workspace,
-//     isAdmin
-// }: WorkspaceHeaderProps ) => {
-//     return (
-//         <div className="flex items-center justify-between px-4 h-[49px] gap-0.5">
-//            <DropdownMenu>
-//                <DropdownMenuTrigger asChild>
-//                     <Button
-//                         variant="transparent"
-//                         className="font-semibold text-lg w-auto p-1.5 overflow-hidden"
-//                         size="sm"
-//                     >
-//                         <span className="truncate">
-//                             {workspace?.name}
-//                             <ChevronDown className="size-4 ml-1 shrink-0" />
-//                         </span>
-//                     </Button>
-//                </DropdownMenuTrigger>
-//                <DropdownMenuContent>
-//                     <DropdownMenuItem
-//                         className="cursor-pointer capitalize"
-//                     >
-//                         <div className="size relative overflow-hidden bg-[#616061] text-white font-semibold text-xl rounded-md flex items-center justify-center mr-2">
-//                             {workspace.name.charAt(0).toUpperCase()}
-//                         </div>
-//                         <div className="flex flex-col items-start">
-//                             <p className="font-bold" >{workspace.name}</p>
-//                             <p className="text-sm text-muted-foreground" >Active workspace</p>
-//                         </div>
-//                     </DropdownMenuItem>
-//                     {isAdmin && (
-//                         <>
-//                             <DropdownMenuSeparator />
-//                                 <DropdownMenuItem
-//                                     className="cursor-pointer py-2"
-//                                     onClick={() => {}}
-//                                 >
-//                                     Invite people to workspace
-//                                 </DropdownMenuItem>
-//                                 <DropdownMenuSeparator />
-//                                 <DropdownMenuItem
-//                                     className="cursor-pointer py-2"
-//                                     onClick={() => {}}
-//                                 >
-//                                     Invite people to workspace
-//                                 </DropdownMenuItem>
-//                             <DropdownMenuSeparator />
-//                         </>
-//                     )}
-//                </DropdownMenuContent>
-//            </DropdownMenu>
-//         </div>
-//     )
-// }
 
 "use client"
 
@@ -82,6 +16,7 @@ import { cn } from "@/lib/utils"
 import { Hint } from "@/components/hint"
 import PreferencesModal from "./preferences-modal"
 import { useState } from "react"
+import InviteModal from "./_components/invite-modal"
 
 interface WorkspaceHeaderProps {
   workspace: Doc<"workspaces">
@@ -94,9 +29,16 @@ export const WorkspaceHeader = ({
 }: WorkspaceHeaderProps) => {
   const [open, setOpen] = useState(false);
   const [prefOpen,setPrefOpen] = useState(false);
+  const [openInvite,setOpenInvite] = useState(false);
 
   return (
     <>
+    <InviteModal 
+      open={openInvite}  
+      setOpen={setOpenInvite}
+      name={workspace?.name}
+      joinCode={workspace?.joinCode}
+    />
     <PreferencesModal  open={prefOpen} setOpen={setPrefOpen} initialValue={workspace.name}  />
     <div className="flex items-center justify-between px-3 h-12">
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -126,7 +68,10 @@ export const WorkspaceHeader = ({
           <DropdownMenuSeparator />
           {isAdmin && (
             <>
-              <DropdownMenuItem className="hover:bg-sky-700 hover:text-white">
+              <DropdownMenuItem 
+                className="hover:bg-sky-700 hover:text-white" 
+                onClick={() => setOpenInvite(true)}
+              >
                 {/* <Share className="mr-2 h-4 w-4" /> */}
                 <span>Invite People to Code test</span>
               </DropdownMenuItem>
