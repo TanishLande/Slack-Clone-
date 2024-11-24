@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import {  LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { IconType } from "react-icons/lib";
-import workspaceId from "./page";
+
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils";
+import workspaceId from "./page";
+import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
 
 
 const sidebarItemVariants = cva(
@@ -36,11 +38,12 @@ export const SidebarItem = ({
     icon: Icon,
     variant
 }: SidebarItemProps ) => {
+    const workspaceId =  useWorkspaceId();
     return(
         <Button
             variant="ghost"
             size="sm"
-            className={cn(sidebarItemVariants({ variant }))}
+            className={cn( "mb-1", sidebarItemVariants({ variant }))}
             asChild
         >
             <Link href={`/workspace/${workspaceId}/channel/${id}`}>
